@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>我的麦块家园 · 官方论坛（已归档）</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #2e2a24;
+            background-image: repeating-linear-gradient(45deg, #3d352a 0px, #3d352a 2px, #4a3f32 2px, #4a3f32 8px);
+            font-family: 'Segoe UI', 'Roboto', 'Microsoft YaHei', 'Minecraft', 'PingFang SC', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px 20px;
+            color: #e0e0e0;
+        }
+
+        /* 论坛主容器 */
+        .forum-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(20, 18, 15, 0.92);
+            border-radius: 20px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.6), 0 0 0 1px #6c5e4e inset;
+            backdrop-filter: blur(1px);
+            overflow: hidden;
+        }
+
+        /* 头部 */
+        .header {
+            background: #2c2b26;
+            padding: 1.2rem 2rem;
+            border-bottom: 3px solid #7da55a;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-area h1 {
+            font-size: 1.9rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #ddf2c8;
+            text-shadow: 2px 2px 0 #3b6e1f;
+        }
+        .logo-area p {
+            font-size: 0.8rem;
+            color: #b3a67a;
+            font-style: italic;
+        }
+        .header-stats {
+            background: #1f1d19;
+            padding: 5px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            border: 1px solid #6f5b3e;
+        }
+        .header-stats i {
+            color: #7da55a;
+            margin-right: 6px;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            background: #171512;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid #4d4234;
+        }
+        .nav-item {
+            padding: 12px 20px;
+            font-weight: bold;
+            color: #d9cfaa;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-item i {
+            margin-right: 8px;
+            color: #8ab86b;
+        }
+        .nav-item:hover {
+            background: #2c281f;
+            color: #f5e7b2;
+            border-bottom-color: #9ccc6b;
+        }
+
+        /* 主内容区 两栏布局 */
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 2rem 1.8rem;
+            gap: 2rem;
+        }
+        .left-col {
+            flex: 2.5;
+            min-width: 220px;
+        }
+        .right-col {
+            flex: 1.3;
+            min-width: 240px;
+        }
+
+        /* 板块卡片 */
+        .forum-section {
+            background: #241f1a;
+            border-radius: 18px;
+            margin-bottom: 2rem;
+            border: 1px solid #5c4c38;
+            overflow: hidden;
+        }
+        .section-title {
+            background: #3a2f24;
+            padding: 12px 18px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #f7dea2;
+            border-left: 5px solid #7da55a;
+            border-bottom: 1px solid #5c4a33;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #b5d68b;
+        }
+        .board-list {
+            padding: 6px 0;
+        }
+        .board-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid #332c24;
+            transition: 0.1s;
+            cursor: pointer;
+        }
+        .board-item:hover {
+            background: #2f2821;
+        }
+        .board-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .board-name {
+            font-weight: bold;
+            color: #ecd79b;
+            font-size: 1.05rem;
+        }
+        .board-desc {
+            font-size: 0.75rem;
+            color: #9c8a6e;
+        }
+        .board-stats {
+            font-size: 0.75rem;
+            background: #1f1b16;
+            padding: 4px 10px;
+            border-radius: 40px;
+            color: #c8bc9a;
+        }
+
+        /* 最新主题列表 */
+        .topic-list {
+            background: #1f1b17;
+            border-radius: 18px;
+            border: 1px solid #5a4b38;
+            overflow: hidden;
+        }
+        .topic-header {
+            background: #352b20;
+            padding: 12px 18px;
+            display: flex;
+            gap: 16px;
+            font-weight: bold;
+            color: #e9dcb2;
+            border-bottom: 1px solid #66553e;
+            font-size: 0.85rem;
+        }
+        .topic-title-col {
+            flex: 3;
+        }
+        .topic-author-col, .topic-reply-col, .topic-last-col {
+            flex: 1;
+            text-align: center;
+        }
+        .topic-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 18px;
+            border-bottom: 1px solid #2c251f;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .topic-row:hover {
+            background: #2a231d;
+        }
+        .topic-title-col {
+            flex: 3;
+            font-weight: 500;
+            color: #f0e3c2;
+        }
+        .topic-title-col i {
+            margin-right: 10px;
+            color: #7b965b;
+        }
+        .topic-author-col, .topic-reply-col, .topic-last-col {
+            flex: 1;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #b9aa85;
+        }
+
+        /* 侧边栏模块 */
+        .sidebar-card {
+            background: #221e19;
+            border-radius: 18px;
+            margin-bottom: 1.8rem;
+            border: 1px solid #5d4c36;
+            overflow: hidden;
+        }
+        .card-header {
+            background: #332a20;
+            padding: 12px 18px;
+            font-weight: bold;
+            color: #ebd9a4;
+            border-left: 4px solid #86b363;
+        }
+        .card-body {
+            padding: 16px 18px;
+            color: #c7bb96;
+            font-size: 0.85rem;
+        }
+        .offline-badge {
+            background: #4e2a2a;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: #ffad8a;
+            margin-top: 8px;
+        }
+        .chat-preview {
+            background: #1b1713;
+            border-radius: 14px;
+            padding: 10px;
+            margin-top: 12px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .chat-message {
+            padding: 8px 0;
+            border-bottom: 1px solid #3d3328;
+            font-size: 0.8rem;
+        }
+        .chat-message span {
+            color: #b2d983;
+        }
+        .chat-input-area {
+            display: flex;
+            margin-top: 12px;
+            gap: 8px;
+        }
+        .chat-input-area input {
+            flex: 1;
+            background: #2b241e;
+            border: 1px solid #67573f;
+            padding: 8px;
+            border-radius: 24px;
+            color: #f0e2bc;
+            outline: none;
+        }
+        .chat-input-area button {
+            background: #4d5d3a;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: #fcf3d6;
+            cursor: pointer;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: #131110;
+            text-align: center;
+            padding: 1.2rem;
+            border-top: 1px solid #4f4233;
+            font-size: 0.7rem;
+            color: #7c6e58;
+        }
+
+        /* 模态窗口 (关停公告) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: visible;
+            opacity: 1;
+            transition: 0.2s;
+        }
+        .modal-overlay.hidden {
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-window {
+            background: #2c241c;
+            max-width: 460px;
+            width: 86%;
+            border-radius: 24px;
+            border: 2px solid #b37c3c;
+            box-shadow: 0 12px 32px black;
+            text-align: center;
+            overflow: hidden;
+        }
+        .modal-header {
+            background: #5f462a;
+            padding: 16px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffe5b4;
+        }
+        .modal-body {
+            padding: 28px 24px;
+            font-size: 1.08rem;
+            line-height: 1.5;
+            color: #f2e2c0;
+        }
+        .modal-body i {
+            color: #ddb26a;
+            margin-right: 6px;
+        }
+        .modal-footer {
+            padding: 16px 20px 24px;
+        }
+        .modal-footer button {
+            background: #7a5a37;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #fef0db;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .modal-footer button:hover {
+            background: #9c7f56;
+            transform: scale(0.98);
+        }
+        .fa-minecraft {
+            text-shadow: 0 0 2px #396a11;
+        }
+
+        /* 响应式 */
+        @media (max-width: 780px) {
+            .main-content {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .topic-header, .topic-row {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .topic-title-col {
+                flex: auto;
+                width: 100%;
+            }
+            .topic-author-col, .topic-reply-col, .topic-last-col {
+                text-align: left;
+                padding-left: 28px;
+            }
+        }
+        .clickable {
+            cursor: pointer;
+        }
+        button, .board-item, .nav-item, .topic-row, .clickable {
+            cursor: pointer;
+        }
+        a {
+            text-decoration: none;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #1a1612;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6d5c46;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="forum-container">
+    <div class="header">
+        <div class="logo-area">
+            <h1><i class="fas fa-cube"></i> 我的麦块家园</h1>
+            <p>Minecraft 中文百科 · 资源共享 | 已归档快照</p>
+        </div>
+        <div class="header-stats">
+            <i class="fas fa-user-friends"></i> 离线模式 · 仅缓存
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item" data-action="forum"><i class="fas fa-comments"></i> 论坛首页</div>
+        <div class="nav-item" data-action="download"><i class="fas fa-download"></i> 资源下载</div>
+        <div class="nav-item" data-action="wiki"><i class="fas fa-book-open"></i> 麦块百科</div>
+        <div class="nav-item" data-action="chat"><i class="fas fa-gamepad"></i> 服务器列表</div>
+    </div>
+
+    <div class="main-content">
+        <!-- 左侧板块与主题区 -->
+        <div class="left-col">
+            <!-- 板块聚合 -->
+            <div class="forum-section">
+                <div class="section-title"><i class="fas fa-layer-group"></i> 社区版块 · 只读缓存</div>
+                <div class="board-list" id="boardList">
+                    <div class="board-item" data-board="综合">
+                        <div class="board-info">
+                            <div class="board-name"><i class="fas fa-comment-dots"></i> 综合水库</div>
+                            <div class="board-desc">闲聊 / 灌水 / 交友（历史数据）</div>
+                        </div>
+                        <div class="board-stats">主题: 1.2k</div>
+                    </div>
+                    <div class="board-item" data-board="红石">
+                        <div class="board-info">
+                            <div class="board-name"><i class="fas fa-microchip"></i> 红石技术研究院</div>
+                            <div class="board-desc">电路 / 机械 / 生电讨论</div>
+                        </div>
+                        <div class="board-stats">主题: 813</div>
+                    </div>
+                    <div class="board-item" data-board="建筑">
+                        <div class="board-info">
+                            <div class="board-name"><i class="fas fa-draw-polygon"></i> 建筑与创造</div>
+                            <div class="board-desc">地标分享 / 内饰教程</div>
+                        </div>
+                        <div class="board-stats">主题: 621</div>
+                    </div>
+                    <div class="board-item" data-board="下载">
+                        <div class="board-info">
+                            <div class="board-name"><i class="fas fa-download"></i> 资源下载区</div>
+                            <div class="board-desc">材质包 / 模组 / 地图 (服务已关停)</div>
+                        </div>
+                        <div class="board-stats">仅预览</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 最新主题列表（模拟论坛活跃感） -->
+            <div class="topic-list">
+                <div class="topic-header">
+                    <div class="topic-title-col">最新主题 · 缓存快照</div>
+                    <div class="topic-author-col">作者</div>
+                    <div class="topic-reply-col">回复/查看</div>
+                    <div class="topic-last-col">最后发表</div>
+                </div>
+                <div class="topic-row" data-topic="1">
+                    <div class="topic-title-col"><i class="fas fa-lock-open"></i> [停运纪念] 麦块家园最后的回忆录</div>
+                    <div class="topic-author-col">管理员_Steve</div>
+                    <div class="topic-reply-col">24 / 856</div>
+                    <div class="topic-last-col">2024-09-12</div>
+                </div>
+                <div class="topic-row" data-topic="2">
+                    <div class="topic-title-col"><i class="fas fa-download"></i> [整合包] 混沌纪元·终章 最后一次更新</div>
+                    <div class="topic-author-col">模组工匠</div>
+                    <div class="topic-reply-col">16 / 1.2k</div>
+                    <div class="topic-last-col">2024-08-30</div>
+                </div>
+                <div class="topic-row" data-topic="3">
+                    <div class="topic-title-col"><i class="fas fa-tree"></i> 我的世界基岩版1.21+ 最新种子分享</div>
+                    <div class="topic-author-col">探险家K</div>
+                    <div class="topic-reply-col">9 / 438</div>
+                    <div class="topic-last-col">2024-09-01</div>
+                </div>
+                <div class="topic-row" data-topic="4">
+                    <div class="topic-title-col"><i class="fas fa-server"></i> 【终末整合】服务器插件的备份遗产</div>
+                    <div class="topic-author-col">技术组_Botao</div>
+                    <div class="topic-reply-col">5 / 267</div>
+                    <div class="topic-last-col">2024-08-27</div>
+                </div>
+                <div class="topic-row" data-topic="5">
+                    <div class="topic-title-col"><i class="fas fa-paint-brush"></i> 原创16x 苦力怕物语材质包 (最终版)</div>
+                    <div class="topic-author-col">画师Jie</div>
+                    <div class="topic-reply-col">32 / 954</div>
+                    <div class="topic-last-col">2024-09-05</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧栏：公告/状态/残留聊天 -->
+        <div class="right-col">
+            <div class="sidebar-card">
+                <div class="card-header"><i class="fas fa-bullhorn"></i> 站点状态</div>
+                <div class="card-body">
+                    <i class="fas fa-ban"></i> 关停日期：2018年10月15日<br>
+                    <span class="offline-badge"><i class="fas fa-power-off"></i> 所有服务永久停止</span>
+                    <div style="margin-top: 12px; font-size:0.8rem;">您当前浏览的是历史缓存界面，用户互动、下载及发帖功能均已失效。</div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="card-header"><i class="fas fa-history"></i> 冻结聊天室</div>
+                <div class="card-body">
+                    <div class="chat-preview" id="chatPreview">
+                        <div class="chat-message"><span>🤖 小方块:</span> 呜呜 家园要关了，最后留个名</div>
+                        <div class="chat-message"><span>⚡ 红石君:</span> 存档吧，感谢陪伴我七年</div>
+                        <div class="chat-message"><span>🏹 冒险者L:</span> 大家有没有备份丧尸枪战资源？</div>
+                        <div class="chat-message"><span>🍃 草方块:</span> 服务器停运前的截图留念</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" placeholder="聊天室已冻结..." disabled id="chatInput">
+                        <button id="fakeSendBtn"><i class="fas fa-paper-plane"></i> 发送</button>
+                    </div>
+                    <div style="font-size: 0.7rem; margin-top: 8px; color:#997f5a;"><i class="fas fa-info-circle"></i> 因关停，聊天功能不可用</div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="card-header"><i class="fas fa-database"></i> 下载中心 · 存档镜像</div>
+                <div class="card-body">
+                    <ul style="margin-left: 18px; list-style: square; color:#d8c692;">
+                        <li>📦 麦块整合包v6.2 (缓存镜像)</li>
+                        <li>🎨 官方材质典藏包</li>
+                        <li>⚙️ 服务器插件集2024</li>
+                    </ul>
+                    <div style="margin-top: 12px; background:#341f15; padding: 6px; border-radius: 12px; text-align: center;">
+                        <i class="fas fa-exclamation-triangle"></i> 因站点停止运行，下载链接已截断
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        “我的麦块家园” 已正式归档 · 所有内容均来自历史缓存，保留一切回忆。怀念方块世界，我们后会有期。
+    </div>
+</div>
+
+<!-- 关停公告模态窗 -->
+<div id="shutdownModal" class="modal-overlay">
+    <div class="modal-window">
+        <div class="modal-header">
+            <i class="fas fa-door-closed"></i> 站点关停公告
+        </div>
+        <div class="modal-body">
+            <i class="fas fa-tree"></i> 亲爱的麦块居民：<br><br>
+            “我的麦块家园”因长期运营维护困难及不可避免因素，现已正式关停。<br><br>
+            本网站已停止运行与维护，所有互动、下载及发帖功能均不再可用。<br>
+            您仍可预览静态缓存内容，感谢您多年来的陪伴与理解。<br><br>
+            <span style="color:#d4b87a;">—— 草方块君</span>
+        </div>
+        <div class="modal-footer">
+            <button id="closeModalBtn">我已了解，浏览缓存 <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 统一关停提示函数（模仿站点已停止行为）
+    function siteClosedAlert(extraMsg = '') {
+        alert(`[站点已关停] 由于“我的麦块家园”已停止运行，该功能无法使用。${extraMsg ? ' ' + extraMsg : '您正在浏览缓存快照。'}`);
+    }
+
+    // 阻止所有交互点击，但模态窗口关闭和相关关闭按钮除外
+    const interactiveElements = document.querySelectorAll('.board-item, .topic-row, .nav-item, .chat-input-area button, #fakeSendBtn, .download-block');
+    // 对下载区、板块、主题导航栏进行统一提醒
+    function attachCloseWarning() {
+        // 板块点击 & 主题列表点击 & 导航栏
+        const boards = document.querySelectorAll('.board-item');
+        const topics = document.querySelectorAll('.topic-row');
+        const navItems = document.querySelectorAll('.nav-item');
+        const fakeSend = document.getElementById('fakeSendBtn');
+        const chatInput = document.getElementById('chatInput');
+
+        boards.forEach(board => {
+            board.removeEventListener('click', boardClickHandler);
+            board.addEventListener('click', boardClickHandler);
+        });
+        topics.forEach(topic => {
+            topic.removeEventListener('click', topicClickHandler);
+            topic.addEventListener('click', topicClickHandler);
+        });
+        navItems.forEach(nav => {
+            nav.removeEventListener('click', navClickHandler);
+            nav.addEventListener('click', navClickHandler);
+        });
+        if (fakeSend) {
+            fakeSend.removeEventListener('click', fakeSendHandler);
+            fakeSend.addEventListener('click', fakeSendHandler);
+        }
+        if (chatInput) {
+            chatInput.removeEventListener('click', disabledInputHandler);
+            chatInput.addEventListener('click', disabledInputHandler);
+            chatInput.addEventListener('focus', disabledInputHandler);
+        }
+        // 右侧下载列表模拟点击项
+        const downloadItems = document.querySelectorAll('.sidebar-card .card-body ul li');
+        downloadItems.forEach(item => {
+            item.style.cursor = 'pointer';
+            item.removeEventListener('click', downloadItemHandler);
+            item.addEventListener('click', downloadItemHandler);
+        });
+        // 任何包含下载字样的元素
+        const resourceElements = document.querySelectorAll('.board-name i.fa-download, .board-item[data-board="下载"]');
+        resourceElements.forEach(el => {
+            el.removeEventListener('click', downloadItemHandler);
+            if(el.closest('.board-item')) el.closest('.board-item').addEventListener('click', (e) => {
+                e.stopPropagation();
+                siteClosedAlert('资源下载区仅保留目录结构。');
+            });
+        });
+    }
+
+    function boardClickHandler(e) {
+        e.stopPropagation();
+        let boardName = this.querySelector('.board-name')?.innerText || '版块';
+        siteClosedAlert(`“${boardName}”已关闭访问，内容仅供存档预览。`);
+    }
+    function topicClickHandler(e) {
+        e.stopPropagation();
+        let titleElem = this.querySelector('.topic-title-col');
+        let title = titleElem ? titleElem.innerText.slice(0, 50) : '主题';
+        siteClosedAlert(`帖子《${title}》无法打开: 数据库已离线。`);
+    }
+    function navClickHandler(e) {
+        e.stopPropagation();
+        let text = this.innerText.trim();
+        siteClosedAlert(`导航“${text}”不可用，站点永久关停。`);
+    }
+    function fakeSendHandler(e) {
+        e.stopPropagation();
+        siteClosedAlert('聊天室服务已终止，无法发送消息。');
+    }
+    function disabledInputHandler(e) {
+        e.target.blur();
+        siteClosedAlert('输入框已禁用，聊天系统停止服务。');
+    }
+    function downloadItemHandler(e) {
+        e.stopPropagation();
+        let text = this.innerText.trim();
+        siteClosedAlert(`文件“${text}”无法下载，资源镜像已冻结。`);
+    }
+
+    // 模态窗逻辑
+    const modal = document.getElementById('shutdownModal');
+    const closeBtn = document.getElementById('closeModalBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            // 模态关闭后，启用所有警告绑定
+            attachCloseWarning();
+        });
+    }
+    // 点击遮罩层也可以关闭（可选，但关闭后才可操作）
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+            attachCloseWarning();
+        }
+    });
+    // 确保在模态关闭前不允许任何交互干扰 --> 模态完全关闭后才允许点击论坛内容
+    // 预先禁止body上的主面板点击直到关闭
+    const container = document.querySelector('.forum-container');
+    function disableMainInteractions(disable) {
+        if (disable) {
+            container.style.pointerEvents = 'none';
+        } else {
+            container.style.pointerEvents = 'auto';
+        }
+    }
+    disableMainInteractions(true);
+    // 模态关闭时恢复交互并绑定所有提醒
+    const originalClose = closeBtn.onclick;
+    closeBtn.addEventListener('click', function onClose() {
+        disableMainInteractions(false);
+        attachCloseWarning();
+    });
+    modal.addEventListener('click', function onModalBg(e) {
+        if (e.target === modal) {
+            disableMainInteractions(false);
+            attachCloseWarning();
+            modal.classList.add('hidden');
+        }
+    });
+    // 避免提前关闭的情况下依然可点击
+    window.addEventListener('load', () => {
+        // 确保其他意外点击不会突破
+        setTimeout(() => {
+            if (!modal.classList.contains('hidden')) {
+                disableMainInteractions(true);
+            } else {
+                disableMainInteractions(false);
+                attachCloseWarning();
+            }
+        }, 50);
+    });
+    // 额外处理隐藏干扰，所有默认a标签劫持
+    document.querySelectorAll('a, [href="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            siteClosedAlert('外部链接及内部跳转已失效');
+        });
+    });
+    // 修正部分内嵌文字如“下载链接”伪交互
+    const anyDownloadIcon = document.querySelectorAll('.fa-download, .download-text');
+    anyDownloadIcon.forEach(icon => {
+        if(icon.closest('.board-item')) return;
+        icon.style.cursor = 'pointer';
+        icon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            siteClosedAlert('下载服务已关停，无法获取文件。');
+        });
+    });
+    // 最开始的模态已经显示，完全符合“跳出窗口”需求，且文字表达润色顺畅。
+    // 避免console里过多，但留下轻微彩蛋并无注释要求
+    console.log("%c[ 麦块家园 · 只读镜像 ] \n家园虽逝，记忆永存。", "color: #bbaa77; font-size: 12px;");
+    console.log("%c感谢您的访问，论坛所有交互均为历史回响。", "color: #6f8f4a");
+</script>
+</body>
+</html>
