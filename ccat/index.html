@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外部SVG引用测试 | asd.svg 动画+Base64图片</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255,255,255,0.96);
+            border-radius: 2rem;
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header {
+            background: #0f172a;
+            color: white;
+            padding: 1.2rem 2rem;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.8;
+            font-size: 0.85rem;
+        }
+        .content {
+            padding: 1.8rem;
+        }
+        .info {
+            background: #eef2ff;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border-left: 5px solid #3b82f6;
+        }
+        .info code {
+            background: #d9e2ef;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #1e293b;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background: #2563eb;
+            border-bottom: 2px solid #1e40af;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #64748b;
+            color: #1e293b;
+        }
+        .btn-outline:hover {
+            background: #e2e8f0;
+        }
+        .svg-viewer {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e2e8f0;
+        }
+        .svg-container {
+            width: 100%;
+            text-align: center;
+        }
+        svg, object, img {
+            max-width: 100%;
+            border-radius: 1rem;
+            display: block;
+            margin: 0 auto;
+        }
+        .status-area {
+            margin-top: 20px;
+            padding: 10px 14px;
+            border-radius: 40px;
+            background: #f8fafc;
+            font-size: 0.85rem;
+            display: inline-block;
+            width: auto;
+            font-family: monospace;
+        }
+        .success-status {
+            background: #dcfce7;
+            color: #15803d;
+            border-left: 4px solid #22c55e;
+        }
+        .error-status {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-left: 4px solid #ef4444;
+        }
+        .loading-status {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        .footer {
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #475569;
+            border-top: 1px solid #cbd5e1;
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <h1>📂 外部 SVG 引用测试</h1>
+        <p>同目录下加载 <code>asd.svg</code> · 内含 Base64 图片 + SMIL 动画 · 检测加载失败提示</p>
+    </div>
+    <div class="content">
+        <div class="info">
+            🧪 <strong>测试说明</strong><br>
+            • 点击下方按钮，将通过 <code>&lt;img&gt;</code> 加载同目录下的 <strong>asd.svg</strong> 文件。<br>
+            • 该 SVG 内部包含<span style="background:#facc15; padding:0 4px; border-radius:6px;">✨ 旋转的 Base64 图片 + 动态图形 ✨</span>，完全自包含。<br>
+            • 若 SVG 文件加载失败 (路径错误 / MIME 问题 / 文件缺失) → 页面会显示红色错误提示。<br>
+            • 若 SVG 黑屏但加载成功，可能是内部 Base64 图片或动画语法问题，请查看浏览器控制台 (F12)。
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" id="loadSvgBtn">🖼️ 加载 asd.svg</button>
+            <button class="btn btn-outline" id="clearSvgBtn">🗑️ 清除显示</button>
+        </div>
+
+        <div class="svg-viewer">
+            <div class="svg-container" id="svgDisplayArea" style="min-height: 380px; display: flex; align-items: center; justify-content: center; color: #64748b;">
+                💡 点击上方按钮，加载外部 SVG 文件 (asd.svg)
+            </div>
+        </div>
+
+        <div style="margin-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div id="loadFeedback" class="status-area loading-status">⚪ 等待操作</div>
+            <div id="extraNote" class="status-area" style="background:#f1f5f9;">📄 要求: asd.svg 必须与当前页面在同一目录</div>
+        </div>
+        <div class="footer">
+            ⚡ 测试排查: 如果 asd.svg 无法显示，请确认文件存在且服务器返回 <code>Content-Type: image/svg+xml</code><br>
+            GitHub Pages 通常自动支持。若黑屏但无报错，请检查 asd.svg 内部 base64 图片格式或动画命名空间。
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const displayArea = document.getElementById('svgDisplayArea');
+        const loadBtn = document.getElementById('loadSvgBtn');
+        const clearBtn = document.getElementById('clearSvgBtn');
+        const feedbackEl = document.getElementById('loadFeedback');
+
+        let currentImgElement = null;
+
+        // 清除当前显示的内容
+        function clearDisplay() {
+            if (displayArea) {
+                displayArea.innerHTML = '<div style="color: #64748b; text-align:center; padding: 2rem;">✨ 已清除 SVG，点击“加载 asd.svg”重新测试</div>';
+            }
+            if (feedbackEl) {
+                feedbackEl.innerHTML = '⚪ 已清除 SVG 视图';
+                feedbackEl.className = 'status-area loading-status';
+            }
+            if (currentImgElement) {
+                // 移除旧监听
+                currentImgElement.onload = null;
+                currentImgElement.onerror = null;
+                currentImgElement = null;
+            }
+        }
+
+        // 加载 asd.svg 并显示
+        function loadAsdSvg() {
+            // 清除之前内容，避免残留
+            clearDisplay();
+
+            // 创建一个新的 img 元素来加载外部 SVG
+            const img = new Image();
+            // 记录当前img引用
+            currentImgElement = img;
+
+            // 显示加载中状态
+            feedbackEl.innerHTML = '⏳ 正在加载 asd.svg ...';
+            feedbackEl.className = 'status-area loading-status';
+
+            // 设置加载成功回调
+            img.onload = () => {
+                // 图片加载成功，说明 SVG 文件被正确请求且基础格式没问题
+                if (displayArea) {
+                    // 清空容器并附加 img 元素
+                    displayArea.innerHTML = '';
+                    displayArea.appendChild(img);
+                    // 设置样式，让 SVG 自适应宽度
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                    img.style.borderRadius = '1rem';
+                    img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+                    feedbackEl.innerHTML = '✅ SVG 加载成功！asd.svg 已渲染 (检查动效和 Base64 图片是否显示)';
+                    feedbackEl.className = 'status-area success-status';
+                }
+                // 额外: 由于 Image 方式加载的 SVG 内部如果存在外部资源失败不会触发 img.onerror,
+                // 但加载 SVG 文件本身成功即表示文件可达。内部 base64 图片如果失败，浏览器控制台会有警告。
+                // 我们在反馈里加一条提醒。
+                console.log('[测试] asd.svg 文件加载成功，检查SVG内部动画可见性');
+            };
+
+            // 加载失败回调 (文件找不到、MIME类型错误、跨域等)
+            img.onerror = (err) => {
+                console.error('[加载错误] asd.svg 无法加载', err);
+                if (displayArea) {
+                    displayArea.innerHTML = `
+                        <div style="background:#fff0f0; border-radius: 1.2rem; padding: 1.5rem; text-align:center; color:#b91c1c; border:1px solid #fecaca;">
+                            <strong>❌ SVG 文件加载失败</strong><br>
+                            无法加载同目录下的 <code>asd.svg</code><br><br>
+                            📌 可能的原因：<br>
+                            • 文件不存在于同目录<br>
+                            • 文件名大小写不匹配 (asd.svg)<br>
+                            • GitHub Pages MIME 配置问题<br>
+                            • 跨域限制 (本地 file 协议打开会有问题，请使用 localhost 或线上环境)
+                        </div>
+                    `;
+                }
+                feedbackEl.innerHTML = '❌ 加载失败: 请确保 asd.svg 与 HTML 在同一目录，且文件名正确';
+                feedbackEl.className = 'status-area error-status';
+                currentImgElement = null;
+            };
+
+            // 触发加载 (相对路径同目录)
+            img.src = 'asd.svg';
+        }
+
+        // 绑定按钮事件
+        loadBtn.addEventListener('click', loadAsdSvg);
+        clearBtn.addEventListener('click', clearDisplay);
+
+        // 可选: 页面加载后显示友好说明
+        console.log('测试页面已就绪，请确保 asd.svg 文件与当前 HTML 放在同一文件夹下');
+    })();
+</script>
+</body>
+</html>
