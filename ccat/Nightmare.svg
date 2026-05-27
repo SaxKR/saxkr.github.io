@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <filter id="glitch">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise">
+        <animate attributeName="baseFrequency" values="0.9;0.1;0.9" dur="0.2s" repeatCount="indefinite" />
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="15" />
+    </filter>
+
+    <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+      <stop offset="60%" stop-color="#000" stop-opacity="0" />
+      <stop offset="100%" stop-color="#000" stop-opacity="0.8" />
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="#1a0000" />
+  
+  <g opacity="0.3">
+    <pattern id="redStripes" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="10" fill="#8b0000" />
+      <rect y="10" width="20" height="10" fill="#2a0000" />
+    </pattern>
+    <rect width="800" height="600" fill="url(#redStripes)" />
+    <g>
+      <rect x="100" y="0" width="30" height="600" fill="#ff0000" opacity="0.5">
+        <animate attributeName="opacity" values="0;0.8;0" dur="0.3s" repeatCount="indefinite" />
+      </rect>
+      <rect x="350" y="0" width="50" height="600" fill="#4a0000" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;0;0.6" dur="0.5s" repeatCount="indefinite" />
+      </rect>
+      <rect x="650" y="0" width="40" height="600" fill="#ff3333" opacity="0.4">
+        <animate attributeName="opacity" values="0;0.7;0" dur="0.2s" repeatCount="indefinite" />
+      </rect>
+    </g>
+  </g>
+
+  <g>
+    <g transform="translate(250, 300)">
+      <image href="./eye.jpg" x="-90" y="-70" width="180" height="140" />
+    </g>
+
+    <g transform="translate(550, 300) scale(-1, 1)">
+      <image href="./eye.jpg" x="-90" y="-70" width="180" height="140" />
+    </g>
+
+    <g transform="translate(400, 150)">
+      <ellipse cx="0" cy="0" rx="50" ry="40" fill="#222222" stroke="#ff0000" stroke-width="5" />
+      <circle cx="0" cy="0" r="15" fill="#ff4400">
+        <animate attributeName="r" values="15;25;15" dur="0.8s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="0" cy="0" r="5" fill="#000000" />
+    </g>
+  </g>
+
+  <g filter="url(#glitch)">
+    <text x="400" y="500" font-size="28" text-anchor="middle" fill="#8b0000" font-family="monospace" opacity="0.7">
+      █ █ █ █ █ 失 败 █ █ █ █ █
+    </text>
+    <text x="400" y="540" font-size="24" text-anchor="middle" fill="#660000" font-family="monospace" opacity="0.6">
+      ❌ ❌ ❌ 无法读取 ❌ ❌ ❌
+    </text>
+    <text x="400" y="570" font-size="18" text-anchor="middle" fill="#990000" font-family="monospace" opacity="0.5">
+      &lt; 意 识 已 崩 解 &gt;
+    </text>
+  </g>
+
+  <g opacity="0" style="animation: jumpscare 4s ease-in-out 3s forwards;">
+    <rect width="800" height="600" fill="#000000" opacity="0.9" />
+    <text x="400" y="200" font-size="120" text-anchor="middle" fill="#ff0000" filter="url(#glitch)">💀</text>
+    <text x="400" y="350" font-size="80" text-anchor="middle" fill="#ffffff">❌ 你 已 无 法 回 头 ❌</text>
+    <text x="400" y="450" font-size="60" text-anchor="middle" fill="#ff6666">⚠️ ！！！꧁为时☬已晚꧂！！！ ⚠️</text>
+    <g opacity="0.6">
+      <text x="100" y="100" font-size="50">👁️</text>
+      <text x="700" y="100" font-size="50">👁️</text>
+      <text x="50" y="500" font-size="70">👁️</text>
+      <text x="750" y="550" font-size="60">👁️</text>
+      <text x="400" y="80" font-size="90">👁️</text>
+      <text x="400" y="580" font-size="80">👁️</text>
+    </g>
+  </g>
+
+  <rect width="800" height="600" fill="url(#vignette)" pointer-events="none" />
+  
+  <rect width="800" height="600" fill="#000000" opacity="0.3" pointer-events="none">
+    <animate attributeName="opacity" values="0.2;0.5;0.1;0.4;0.2" dur="0.15s" repeatCount="indefinite" />
+  </rect>
+
+  <text x="400" y="30" font-size="20" text-anchor="middle" fill="#ff0000" font-family="monospace" style="animation: blink 0.8s infinite;">
+    ⚠️ SYSTEM FAILURE — DO NOT CLOSE ⚠️
+  </text>
+
+  <style>
+    @keyframes jumpscare {
+      0% { opacity: 0; }
+      80% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</svg>
